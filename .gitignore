@@ -1,0 +1,45 @@
+# Local tooling and secrets
+.agents
+.env
+.env.*
+!.env.example
+.DS_Store
+.freebuff
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+out/
+*.tsbuildinfo
+.turbo/
+.vite/
+coverage/
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+docs/.vitepress/.temp/
+
+# Test and tool artifacts
+playwright-report/
+test-results/
+blob-report/
+*.lcov
+.eslintcache
+
+# Editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Misc
+*.log
+npm-debug.log*
+pnpm-debug.log*
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-vec
