@@ -7,6 +7,10 @@ The authoritative document is
 [CONTRIBUTING.md](https://github.com/JoeyHammoth/Swipeline/blob/main/CONTRIBUTING.md);
 this page is the short version.
 
+<p class="icons8-contributor-art">
+  <img src="/brand/icons8/open-source-and-coding.png" alt="3D illustration of source code and open collaboration" width="180" height="180" loading="lazy">
+</p>
+
 ## Ground rules
 
 - Sign off commits (`git commit -s`) — the project uses the DCO, not a CLA.
@@ -65,3 +69,5 @@ quiet, a polite nudge is welcome.
 - A ranking change with no benchmark result.
 
 None of these are personal; they are the review checklist.
+
+<p class="icons8-credit">Illustration by <a href="https://icons8.com">Icons8</a>.</p>

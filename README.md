@@ -12,12 +12,31 @@
 
 ![Swipeline: cards move through a ranking pipeline into a swipeable deck](docs/public/brand/hero.svg)
 
+<p align="center">
+  <img src="docs/public/brand/icons8/typescript.png" width="30" height="30" alt="TypeScript logo" title="TypeScript">
+  &nbsp;<strong>TypeScript-first</strong> · Node.js 24+ · optional SQLite
+</p>
+
 ## Why Swipeline?
 
-- **Modular.** Every layer — source, storage, ranking, UI — is a small package behind a typed interface. Use one, a few, or all of them.
-- **Local-first.** The default setup keeps cards, events and profiles on the device. No Swipeline servers, no telemetry, export and erase built in.
-- **Any source.** Declarative adapter mappings cover most JSON and REST APIs; write a typed adapter when you need more.
-- **Measurable ranking.** A benchmark harness with synthetic users ships with the repo, so "the ranking works" is a number in CI, not a claim.
+<table>
+  <tr>
+    <td align="center" width="56"><img src="docs/public/brand/icons8/modular.png" width="42" height="42" alt="Puzzle piece icon"></td>
+    <td><strong>Modular.</strong> Every layer — source, storage, ranking, UI — is a small package behind a typed interface. Use one, a few, or all of them.</td>
+  </tr>
+  <tr>
+    <td align="center" width="56"><img src="docs/public/brand/icons8/local-first.png" width="42" height="42" alt="Locked privacy icon"></td>
+    <td><strong>Local-first.</strong> The default setup keeps cards, events and profiles on the device. No Swipeline servers, no telemetry, export and erase built in.</td>
+  </tr>
+  <tr>
+    <td align="center" width="56"><img src="docs/public/brand/icons8/any-source.png" width="42" height="42" alt="Plug icon"></td>
+    <td><strong>Any source.</strong> Declarative adapter mappings cover most JSON and REST APIs; write a typed adapter when you need more.</td>
+  </tr>
+  <tr>
+    <td align="center" width="56"><img src="docs/public/brand/icons8/ranking.png" width="42" height="42" alt="Bar chart icon"></td>
+    <td><strong>Measurable ranking.</strong> A benchmark harness with synthetic users ships with the repo, so "the ranking works" is a number in CI, not a claim.</td>
+  </tr>
+</table>
 
 Swipe UI libraries are plentiful but shallow — gestures and callbacks, no data, no ranking, no persistence. Recommender engines are powerful but swipe-agnostic and infrastructure-heavy. Swipeline is the glue: a normalized card schema, declarative source adapters, swipe-specific event semantics, ranking tuned for one-card-at-a-time decks, and a UI binding contract that any framework can satisfy.
 
@@ -128,13 +147,21 @@ Gorse and similar engines are a complement, not a competitor: an `external` rank
 
 ## Contributing
 
+<img align="right" width="170" src="docs/public/brand/icons8/open-source-and-coding.png" alt="3D illustration of source code and open collaboration">
+
 Read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). We use the Developer Certificate of Origin — sign off your commits with `git commit -s`. Security reports go through [SECURITY.md](SECURITY.md), never a public issue. Governance, including how to become a maintainer, is in [GOVERNANCE.md](GOVERNANCE.md).
 
 Looking for a first contribution? Browse [`good first issue`](https://github.com/JoeyHammoth/Swipeline/issues?q=is%3Aopen+label%3A%22good+first+issue%22), or start with a new source adapter, a card template, documentation fixes, or a binding for your favourite framework.
 
+<br clear="right">
+
 ## Support
 
 Questions and design discussions belong in [GitHub Discussions](https://github.com/JoeyHammoth/Swipeline/discussions). Reproducible bugs go to [GitHub Issues](https://github.com/JoeyHammoth/Swipeline/issues). Report security problems privately through [SECURITY.md](SECURITY.md).
+
+## Credits
+
+Feature icons and the contributor illustration are from [Icons8](https://icons8.com). File-level sources and licensing are recorded in [`docs/public/brand/ATTRIBUTION.md`](docs/public/brand/ATTRIBUTION.md).
 
 ## License
 
