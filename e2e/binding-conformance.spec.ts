@@ -1,9 +1,11 @@
+import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
 /**
  * The package tests run the suite under jsdom. These run the same assertions in a
  * real browser, against the fixture page each binding ships, so pointer, keyboard
- * and shadow-DOM behaviour is certified rather than simulated.
+ * and shadow-DOM behaviour is certified rather than simulated. axe then checks the
+ * same page against the WCAG A and AA rules.
  */
 const FIXTURES = ['react', 'element'] as const
 
@@ -25,5 +27,14 @@ for (const name of FIXTURES) {
 
     expect(pageErrors).toEqual([])
     expect(report).toEqual({ binding: name, checks: 7 })
+
+    const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
+    expect(
+      accessibility.violations.map((violation) => ({
+        id: violation.id,
+        impact: violation.impact,
+        nodes: violation.nodes.map((node) => node.target),
+      })),
+    ).toEqual([])
   })
 }

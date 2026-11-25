@@ -28,9 +28,9 @@ lockfile, plus nightly and on demand. The jsdom suites run in `ci.yml` on every 
 
 ## What is still not covered
 
-- **Automated accessibility rules.** The suite asserts a live region, the keyboard
-  path and focus handling, but it is not an axe scan; `docs` describes the
-  behaviours, not a WCAG audit result.
+- **Full WCAG coverage.** axe runs with the `wcag2a` and `wcag2aa` tags on the two
+  fixture pages. AAA rules, the example apps and real assistive-technology passes
+  are not covered.
 - **Hydration equality.** `packages/react/test/ssr.test.tsx` proves the React
   binding renders on the server without a DOM; it does not compare a hydrated tree
   against the server markup.
