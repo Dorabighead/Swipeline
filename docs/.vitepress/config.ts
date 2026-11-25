@@ -92,6 +92,7 @@ export default defineConfig({
           { text: 'Schemas', link: '/reference/schemas' },
           { text: 'Theming', link: '/reference/theming' },
           { text: 'API reference', link: '/reference/api' },
+          { text: 'Binding status', link: '/reference/binding-status' },
           { text: 'Contracts', link: '/architecture/contracts' },
         ],
       },

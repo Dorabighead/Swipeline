@@ -158,11 +158,12 @@ what actually happened, because two items behaved differently from the plan.
 
 ### Two deviations worth remembering
 
-1. **GitHub dependency review is unavailable.** The dependency-graph compare API
-   returns 403 and `/dependency-graph/sbom` returns 404 even though the default
-   branch has a committed `pnpm-lock.yaml`. The PR gate is
-   `pnpm audit --prod --audit-level=high` plus the license policy; the
-   dependency-review workflow is manual-only until the graph resolves (issue #27).
+1. **GitHub dependency review was unavailable when this was recorded.** The
+   dependency-graph compare API returned 403 and `/dependency-graph/sbom`
+   returned 404 even though the default branch has a committed `pnpm-lock.yaml`.
+   Both endpoints resolved on 2026-11-25, so `dependency-review.yml` runs on every
+   pull request again, with `pnpm audit --prod --audit-level=high` kept as the
+   second gate (issue #27).
 2. **Secret-scanning extras are not API-settable** on this repository. They remain
    disabled and must be enabled in Settings → Code security if the plan's checklist
    is to be complete.

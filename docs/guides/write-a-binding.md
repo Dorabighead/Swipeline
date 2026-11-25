@@ -15,11 +15,8 @@ export function mountDeck(root: HTMLElement, store: DeckStore) {
     element: root,
     onIntent: (intent) => {
       const card = store.getSnapshot().cards[0]
-      if (!card) return
-      if (intent.type === 'commit') {
-        store.dispatch({ type: 'swipe', action: intent.action, cardId: card.id })
-      }
-      if (intent.type === 'drag') root.style.setProperty('--swl-drag-x', `${intent.dx}px`)
+      if (!card || intent.kind !== 'commit') return
+      store.dispatch({ type: 'swipe', action: intent.action, cardId: card.id })
     },
   })
 
@@ -52,17 +49,35 @@ that it belongs in `core`.
 
 ## Conformance
 
-`@swipeline/binding-testkit` runs the same Playwright suite against a fixture page
-that your binding implements.
+`@swipeline/binding-testkit` exports one assertion function. A fixture mounts
+your binding and returns its root plus `settle` and `destroy`:
 
-```bash
-pnpm binding-testkit --url http://localhost:5173/conformance
+```ts
+import { assertBindingConformance } from '@swipeline/binding-testkit'
+
+const report = await assertBindingConformance(
+  {
+    name: 'vue',
+    async mount() {
+      const root = mountMyDeck()
+      return { root, settle: async () => {}, destroy: () => root.remove() }
+    },
+  },
+  { firstTitle: 'First card', secondTitle: 'Second card' },
+)
+// report: { binding: 'vue', checks: 7 }
 ```
 
-Covered: render from snapshot, pointer swipe, keyboard and buttons, undo,
-accessibility, states, custom card, lifecycle, SSR. A binding is documented as
-official or compatible only after the suite passes; the [status matrix](https://github.com/JoeyHammoth/Swipeline/blob/main/docs/swipeline-design-and-implementation-plan.md#binding-status-matrix-published-in-the-docs)
-is generated from results, not from intent.
+Covered: render from the snapshot, a control per action, pointer gestures on the
+root, ArrowRight advancing, `u` undoing, a polite live region, and teardown that
+detaches the root. Failures are collected into one `BindingConformanceError`.
+
+The suite is DOM-based, so it runs under jsdom in this repository's tests today
+(`packages/react/test/conformance.test.tsx`,
+`packages/element/test/element.test.ts`). The same fixtures can be driven by
+Playwright in a browser once the e2e workflow lands. The
+[binding status matrix](/reference/binding-status) lists only bindings with a
+passing run.
 
 ## Framework glue, concretely
 

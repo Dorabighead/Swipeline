@@ -1,5 +1,6 @@
 packages:
   - "packages/*"
+  - "examples/*"
 
 # pnpm 12 reads dependency build policy from this file. Keep the allowlist
 # minimal and reviewed: esbuild downloads/verifies its platform binary at

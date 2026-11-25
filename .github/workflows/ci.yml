@@ -53,6 +53,12 @@ jobs:
       - name: Build packages
         run: pnpm build
 
+      - name: Typecheck example apps
+        run: pnpm examples:typecheck
+
+      - name: Build example apps
+        run: pnpm examples:build
+
       - name: Package lint (exports, types, dual format)
         run: pnpm publint
 
@@ -65,9 +71,8 @@ jobs:
       - name: Dependency license policy
         run: pnpm licenses:check
 
-      # The repository dependency graph does not resolve yet, so GitHub's
-      # dependency-review action returns 403 (tracked in issue #27). This audit is
-      # the working vulnerability gate until that is fixed.
+      # Second line of defence: dependency-review.yml gates what a PR adds, while
+      # this audit checks the production tree that is actually installed.
       - name: Known vulnerabilities in production dependencies
         run: pnpm audit --prod --audit-level=high
 

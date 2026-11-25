@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "noEmit": true,
+    "declaration": false,
+    "declarationMap": false,
+    "paths": {
+      "@swipeline/adapter-arxiv": ["../packages/adapter-arxiv/src/index.ts"],
+      "@swipeline/adapter-openlibrary": ["../packages/adapter-openlibrary/src/index.ts"],
+      "@swipeline/adapter-themealdb": ["../packages/adapter-themealdb/src/index.ts"],
+      "@swipeline/core": ["../packages/core/src/index.ts"],
+      "@swipeline/element": ["../packages/element/src/index.ts"],
+      "@swipeline/gestures": ["../packages/gestures/src/index.ts"],
+      "@swipeline/react": ["../packages/react/src/index.tsx"],
+      "@swipeline/store-indexeddb": ["../packages/store-indexeddb/src/index.ts"]
+    }
+  }
+}

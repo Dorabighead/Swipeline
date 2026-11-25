@@ -1,0 +1,72 @@
+:root {
+  color-scheme: light dark;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #0f1020;
+  color: #f4f2ff;
+}
+
+#root {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.book {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+  align-items: start;
+}
+
+.book__cover {
+  width: 100%;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 35%);
+}
+
+.book__title {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.book__author {
+  margin: 0.25rem 0 0;
+  color: #c9c4ff;
+}
+
+.book__body {
+  margin: 0.75rem 0 0;
+  color: #d8d5ec;
+}
+
+.book__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.book__tags li {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #2a2a4a;
+  font-size: 0.75rem;
+}
+
+.book__attribution {
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  color: #a5a0c8;
+}
+
+.book__attribution a {
+  color: inherit;
+}

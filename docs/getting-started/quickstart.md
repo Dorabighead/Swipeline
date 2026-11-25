@@ -71,6 +71,19 @@ pnpm check:boundaries      # no framework imports outside bindings
 pnpm licenses:check
 ```
 
+## Run the examples
+
+Three runnable decks live in `examples/`, all built from one shared config:
+
+```bash
+pnpm --filter ./examples/books-react dev    # Open Library + IndexedDB
+pnpm --filter ./examples/recipes-react dev  # TheMealDB + memory store
+pnpm --filter ./examples/papers-html dev    # arXiv + the <swipe-deck> element
+```
+
+They resolve workspace packages from source, so `pnpm build` is not required
+first. `papers-html` has no framework dependency at all.
+
 ## What to read next
 
 1. [Cards and adapters](/concepts/cards-and-adapters) — the data model you will

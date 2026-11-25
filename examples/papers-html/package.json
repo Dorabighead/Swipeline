@@ -1,0 +1,26 @@
+{
+  "name": "swipeline-example-papers-html",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Papers deck: arXiv and the <swipe-deck> Web Component, no framework.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@swipeline/adapter-arxiv": "workspace:*",
+    "@swipeline/core": "workspace:*",
+    "@swipeline/element": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2",
+    "vite": "^6.4.4"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
