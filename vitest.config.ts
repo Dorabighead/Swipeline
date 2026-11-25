@@ -15,6 +15,8 @@ export default defineConfig({
       '@swipeline/store-memory': source('./packages/store-memory/src/index.ts'),
       '@swipeline/gestures': source('./packages/gestures/src/index.ts'),
       '@swipeline/core': source('./packages/core/src/index.ts'),
+      '@swipeline/server': source('./packages/server/src/index.ts'),
+      '@swipeline/cli': source('./packages/cli/src/index.ts'),
       '@swipeline/bench': source('./packages/bench/src/index.ts'),
       '@swipeline/rank': source('./packages/rank/src/index.ts'),
       '@swipeline/react': source('./packages/react/src/index.ts'),

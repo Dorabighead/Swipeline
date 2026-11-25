@@ -1,61 +1,70 @@
 # Self-host the server
 
-The optional server adds multi-device sync, server-side ranking and webhooks. It
-is a small Hono app that implements the same store interfaces as the client, so a
+The optional server adds multi-device sync and server-side ranking. It is a small
+Node HTTP service that implements the same store interfaces as the client, so a
 deck behaves identically whether ranking runs in the browser or on the server.
 
-::: warning Milestone M3
-The server does not exist yet. This page describes the interface it will expose,
-so client work can be planned against it.
+::: warning Milestone M3 in progress
+`@swipeline/server` implements health, event append, export and erase. SQLite and
+Postgres storage, server-side ranking, collections, webhooks and the OpenAPI
+document are planned; the table below marks what actually works.
 :::
 
 ## Run it
 
 ```bash
-npx swipeline serve --db ./swipeline.db --port 8787 --cors https://app.example.com
+npx swipeline serve --port 8787 --cors https://app.example.com
 ```
 
-Or with Docker:
+`serve` currently uses the in-memory event log, so history lasts only as long as
+the process. Or wire it up yourself:
 
-```bash
-docker run -p 8787:8787 -v "$PWD/data:/data" -e SWILINE_HMAC_SECRET=… swipeline/server:0
+```ts
+import { MemoryEventStore } from '@swipeline/core'
+import { createServer } from '@swipeline/server'
+
+const server = createServer({
+  events: new MemoryEventStore(),
+  cors: ['https://app.example.com'],
+})
+const running = await server.listen(8787)
+console.log(running.url)
 ```
-
-SQLite is the default (one file, zero services). Postgres is supported by setting
-`DATABASE_URL`, with `pgvector` optional for server-side vector search.
 
 ## API surface
 
-| Method | Path | Purpose |
+| Method | Path | Status |
 |---|---|---|
-| `POST` | `/events` | Append a batch of events (idempotent by id) |
-| `GET` | `/deck/:id/next?actor=…&limit=…` | Ranked cards for an actor |
-| `GET` | `/collections/:id` | Saved `later` items |
-| `GET` | `/export/:actor` | JSONL of events |
-| `DELETE` | `/actors/:actor` | Erase all events for an actor |
-| `GET` | `/health` | Liveness |
-| `GET` | `/openapi.json` | Generated from the same schemas |
+| `POST` | `/events` | Implemented — validated, idempotent by event id, body capped |
+| `GET` | `/export/:actor?deckId=&since=&until=&afterId=&limit=` | Implemented — JSONL |
+| `DELETE` | `/actors/:actor` | Implemented |
+| `GET` | `/health` | Implemented |
+| `GET` | `/deck/:id/next?actor=…&limit=…` | Planned — needs the item store and ranking |
+| `GET` | `/collections/:id` | Planned |
+| `GET` | `/openapi.json` | Planned |
 
-The OpenAPI document is generated from the shared schemas, which is how Flutter,
-Swift and Kotlin clients can be produced without a JS engine.
+`POST /events` accepts an array or `{ "events": [...] }`. Duplicate ids are
+dropped by the store, so a client can retry a batch safely.
 
 ## Authentication
 
-Swipeline does not implement user accounts. Two hooks are provided:
+Swipeline does not implement user accounts. Pass a hook; return `null` to reject
+with 401. When the hook is set, a batch may only contain events for the actor it
+resolves, so a client cannot write into someone else's history.
 
 ```ts
 createServer({
+  events,
   authenticate: async (request) => {
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
+    const token = request.headers.authorization?.replace('Bearer ', '')
     const claims = await verifyJwt(token)
     return claims ? { actor: claims.sub } : null
   },
 })
 ```
 
-- **API key** for machine-to-machine use.
-- **JWT verification hook** for apps that already have auth.
-- Return `null` to reject with 401. Never trust an `actor` from the request body.
+Never trust an `actor` from the request body: the hook is what decides identity,
+and the server refuses a mismatch rather than rewriting it.
 
 ## Sync model
 
@@ -67,8 +76,8 @@ sequenceDiagram
 
   Client->>Outbox: append locally
   Outbox->>Server: POST /events (batch, idempotency key = event id)
-  Server-->>Outbox: 202 accepted / 409 duplicate
-  Client->>Server: GET /deck/:id/next
+  Server-->>Outbox: 202 accepted
+  Client->>Server: GET /deck/:id/next (planned)
   Server-->>Client: ranked cards (server profile)
 ```
 
@@ -78,24 +87,18 @@ in order.
 
 ## Webhooks
 
-`POST` batches are signed:
-
-```
-X-Swipeline-Signature: t=1732449600,v1=<hmac-sha256(t + "." + body, secret)>
-```
-
-Receivers should reject timestamps older than five minutes and deduplicate by
-event id. The CLI has a `swipeline webhook listen` helper (M3) that prints verified
-payloads locally.
+Planned with `sinks`. The intended signature is `X-Swipeline-Signature:
+t=<unix>,v1=<hmac-sha256(t + "." + body, secret)>`, with receivers rejecting
+timestamps older than five minutes. Nothing signs or delivers webhooks yet.
 
 ## Operations
 
 | Concern | Guidance |
 |---|---|
-| Backups | SQLite file, or your Postgres backup policy |
-| Migrations | Apply on boot by default; disable with `MIGRATIONS=manual` in production |
+| Backups | Not applicable to the in-memory store; a durable store arrives with storage |
+| Migrations | Planned with SQLite/Postgres |
 | Rate limits | Put the server behind a proxy; it does not rate-limit by actor |
-| Logs | Structured JSON; event bodies are not logged by default |
+| Logs | The server writes no request logs today; add them at your proxy |
 | Deletion | `DELETE /actors/:actor` is synchronous and irreversible |
 | TLS | Terminate at the proxy; the server speaks plain HTTP |
 

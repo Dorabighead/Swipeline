@@ -46,10 +46,12 @@ work starts.
 
 ## M3 — v0.3: server and CLI
 
-- `server` (SQLite + Postgres), `remote` store with outbox sync
-- `sinks`: signed webhook, JSONL
-- `cli`: init, source add, dev, validate, export/import, serve
-- `create-swipeline` templates; trusted publishing wired up
+- [x] `server` core: `GET /health`, validated idempotent `POST /events`, `GET /export/:actor`, `DELETE /actors/:actor`, auth hook and CORS
+- [ ] `server` storage: SQLite + Postgres, `remote` store with outbox sync
+- [ ] `sinks`: signed webhook, JSONL
+- [x] `cli`: `serve`, `validate`, help and exit codes 0/1/2
+- [ ] `cli`: init, source add, dev, bench, export/import, doctor
+- [ ] `create-swipeline` templates; trusted publishing wired up
 - Acceptance: offline-then-online sync passes; webhook delivery is idempotent;
   scaffold-and-build nightly job is green
 

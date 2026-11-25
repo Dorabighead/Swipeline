@@ -96,6 +96,19 @@ Binding conformance suite for Swipeline: keyboard, buttons, undo, a11y and lifec
 | `BindingHandle` | interface |  |
 | `BindingReport` | interface |  |
 
+## `@swipeline/cli`
+
+The swipeline command: serve the HTTP API and validate a JSONL history.
+
+| Symbol | Kind | Summary |
+| --- | --- | --- |
+| `CliIo` | interface |  |
+| `HistoryValidation` | interface |  |
+| `parseServeOptions` | function |  |
+| `ServeOptions` | interface |  |
+| `ServeParse` | type |  |
+| `USAGE` | const |  |
+
 ## `@swipeline/core`
 
 Schemas, types, config and the headless deck engine for Swipeline.
@@ -253,6 +266,18 @@ React binding for Swipeline decks: SwipeDeck, useDeck, keyboard and live regions
 | `SwipeDeck` | function |  |
 | `SwipeDeckProps` | interface |  |
 | `useDeck` | function | Subscribes a component to the engine's snapshot; SSR uses the stable server snapshot. |
+
+## `@swipeline/server`
+
+Optional HTTP service: append events, export a history and erase an actor.
+
+| Symbol | Kind | Summary |
+| --- | --- | --- |
+| `AuthResult` | type | What `authenticate` may return. `undefined` is internal: no hook configured. |
+| `createServer` | function |  |
+| `RunningServer` | interface |  |
+| `ServerOptions` | interface |  |
+| `SwipelineServer` | interface |  |
 
 ## `@swipeline/store-indexeddb`
 
