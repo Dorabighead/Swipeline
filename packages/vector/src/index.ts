@@ -142,8 +142,10 @@ export interface SqliteVecIndexOptions {
 
 /**
  * Adapter over a SQLite vector extension. The driver owns persistence and the
- * extension; this class keeps ids for `size` and normalizes the distance into
- * the same score the in-memory index returns.
+ * extension. `size` tracks unique ids from acknowledged writes to this index,
+ * minus acknowledged removals. If a driver partially writes and then rejects,
+ * the index cannot tell which rows were written.
+ * Search normalizes the distance into the same score the in-memory index returns.
  */
 export function sqliteVecIndex(options: SqliteVecIndexOptions): VectorIndex {
   const { driver, dimensions } = options
@@ -168,9 +170,9 @@ export function sqliteVecIndex(options: SqliteVecIndexOptions): VectorIndex {
         const vector = normalized(entry.vector, dimensions)
         if (!entry.id) throw new TypeError('vector entries need an id')
         rows.push({ id: entry.id, vector: Array.from(vector) })
-        ids.add(entry.id)
       }
       await driver.upsert(table, rows)
+      for (const { id } of rows) ids.add(id)
     },
     async remove(removeIds) {
       await ensure()
