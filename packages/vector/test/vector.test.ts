@@ -111,4 +111,23 @@ describe('sqliteVecIndex', () => {
     expect(driver.rows.size).toBe(0)
     expect(index.size).toBe(0)
   })
+
+  it('keeps size unchanged after a rejected write and counts unique ids on retry', async () => {
+    const driver = fakeDriver()
+    const index = sqliteVecIndex({ driver, dimensions: 2 })
+    await index.upsert([{ id: 'a', vector: [1, 0] }])
+
+    const entries = [
+      { id: 'a', vector: [0, 1] },
+      { id: 'b', vector: [0, 1] },
+      { id: 'b', vector: [1, 0] },
+    ]
+    vi.mocked(driver.upsert).mockRejectedValueOnce(new Error('write failed'))
+
+    await expect(index.upsert(entries)).rejects.toThrow('write failed')
+    expect(index.size).toBe(1)
+
+    await index.upsert(entries)
+    expect(index.size).toBe(2)
+  })
 })
