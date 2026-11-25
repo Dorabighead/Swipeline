@@ -72,12 +72,12 @@ Covered: render from the snapshot, a control per action, pointer gestures on the
 root, ArrowRight advancing, `u` undoing, a polite live region, and teardown that
 detaches the root. Failures are collected into one `BindingConformanceError`.
 
-The suite is DOM-based, so it runs under jsdom in this repository's tests today
-(`packages/react/test/conformance.test.tsx`,
-`packages/element/test/element.test.ts`). The same fixtures can be driven by
-Playwright in a browser once the e2e workflow lands. The
-[binding status matrix](/reference/binding-status) lists only bindings with a
-passing run.
+The suite is DOM-based and runs twice: under jsdom in
+`packages/react/test/conformance.test.tsx` and
+`packages/element/test/element.test.ts`, and in Chromium against the fixture pages
+in `examples/conformance`, driven by `e2e/binding-conformance.spec.ts` in
+`e2e.yml`. The [binding status matrix](/reference/binding-status) lists only
+bindings with a passing run.
 
 ## Framework glue, concretely
 

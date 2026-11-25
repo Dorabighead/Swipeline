@@ -8,6 +8,8 @@
       "@swipeline/adapter-arxiv": ["../packages/adapter-arxiv/src/index.ts"],
       "@swipeline/adapter-openlibrary": ["../packages/adapter-openlibrary/src/index.ts"],
       "@swipeline/adapter-themealdb": ["../packages/adapter-themealdb/src/index.ts"],
+      "@swipeline/adapter-tmdb": ["../packages/adapter-tmdb/src/index.ts"],
+      "@swipeline/binding-testkit": ["../packages/binding-testkit/src/index.ts"],
       "@swipeline/core": ["../packages/core/src/index.ts"],
       "@swipeline/element": ["../packages/element/src/index.ts"],
       "@swipeline/gestures": ["../packages/gestures/src/index.ts"],

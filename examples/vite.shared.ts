@@ -11,6 +11,8 @@ export const workspaceAliases: Record<string, string> = {
   '@swipeline/adapter-arxiv': source('../packages/adapter-arxiv/src/index.ts'),
   '@swipeline/adapter-openlibrary': source('../packages/adapter-openlibrary/src/index.ts'),
   '@swipeline/adapter-themealdb': source('../packages/adapter-themealdb/src/index.ts'),
+  '@swipeline/adapter-tmdb': source('../packages/adapter-tmdb/src/index.ts'),
+  '@swipeline/binding-testkit': source('../packages/binding-testkit/src/index.ts'),
   '@swipeline/core': source('../packages/core/src/index.ts'),
   '@swipeline/element': source('../packages/element/src/index.ts'),
   '@swipeline/gestures': source('../packages/gestures/src/index.ts'),

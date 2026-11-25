@@ -1,30 +1,36 @@
-import type { DeckSnapshot, DeckStore } from '@swipeline/core'
+import { type Card, createEngine, type SourceAdapter } from '@swipeline/core'
 import { renderToString } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { SwipeDeck } from '../src/index.js'
 
-const snapshot: DeckSnapshot = Object.freeze({
-  state: 'loading',
-  deckId: 'ssr',
-  actor: 'server',
-  cards: [],
-  position: 0,
-  canUndo: false,
-  loadingMore: false,
-  version: 0,
-})
-
-const store: DeckStore = {
-  getSnapshot: () => snapshot,
-  getServerSnapshot: () => snapshot,
-  subscribe: () => () => {},
-  dispatch: () => {},
+const source: SourceAdapter<Card> = {
+  id: 'ssr',
+  capabilities: { pagination: 'none' },
+  async fetch() {
+    return {
+      items: [
+        {
+          schemaVersion: 1,
+          id: 'ssr:1',
+          sourceId: 'ssr',
+          title: 'Server card',
+          fetchedAt: '2026-11-25T00:00:00.000Z',
+        },
+      ],
+    }
+  },
+  normalize(raw) {
+    return raw
+  },
 }
 
-describe('SwipeDeck server rendering', () => {
-  it('renders without window and uses the server snapshot', () => {
-    const html = renderToString(<SwipeDeck store={store} />)
-    expect(html).toContain('Loading cards')
-    expect(html).toContain('aria-live="polite"')
+describe('SwipeDeck on the server', () => {
+  // No `@vitest-environment jsdom` here on purpose: this file must run in Node
+  // with no document, which is the SSR smoke test the binding guide asks for.
+  it('renders a deck shell without a DOM and without throwing', () => {
+    const store = createEngine({ deckId: 'ssr', actor: 'reader', source })
+    const html = renderToString(<SwipeDeck store={store} label="Server deck" />)
+    expect(html).toContain('role="application"')
+    expect(html).toContain('Server deck')
   })
 })

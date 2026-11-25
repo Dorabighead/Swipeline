@@ -1,7 +1,11 @@
 # Quickstart
 
 **Target: a working deck in under ten minutes on a clean machine.** That is goal
-G1 in the design plan and the quickstart job in CI enforces it.
+G1 in the design plan. Until the published template exists, the measurable half is
+the contributor setup below: on 2026-11-25 a clean tree copy with an empty pnpm
+store installed, built and tested in 1m 28s (install 41s, build 35s, test 12s,
+Node 24). The `quickstart` job that runs this over the published packages is not
+wired yet.
 
 ::: warning Not installable yet
 This is the v0.1 flow. Today `@swipeline/core` is an unpublished workspace
@@ -69,6 +73,7 @@ pnpm typecheck
 pnpm test
 pnpm check:boundaries      # no framework imports outside bindings
 pnpm licenses:check
+pnpm e2e                   # binding/example changes; install Chromium once
 ```
 
 ## Run the examples

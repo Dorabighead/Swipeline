@@ -40,6 +40,7 @@ work starts.
 - [x] Adapters: arXiv, Open Library, TheMealDB, TMDB; adapter testkit and template
 - [x] `element` Web Component and `binding-testkit` conformance suite v1
 - [x] [Binding status matrix](/reference/binding-status) published from passing runs
+- [x] Browser conformance fixtures and `e2e.yml` (Playwright, Chromium)
 - Acceptance: default pipeline beats random and popularity baselines by the
   documented margin; React and the Web Component pass conformance; SSR smoke passes
 

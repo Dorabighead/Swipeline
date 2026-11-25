@@ -1,0 +1,56 @@
+name: E2E
+
+# Browser binding conformance: every binding's fixture page runs the shared suite
+# in Chromium. Path-filtered so unrelated PRs do not pay for a browser.
+on:
+  pull_request:
+    paths:
+      - "packages/core/**"
+      - "packages/gestures/**"
+      - "packages/react/**"
+      - "packages/element/**"
+      - "packages/binding-testkit/**"
+      - "examples/**"
+      - "e2e/**"
+      - "playwright.config.ts"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/e2e.yml"
+  schedule:
+    - cron: "23 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  conformance:
+    name: Browser binding conformance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Binding conformance in a real browser
+        run: pnpm e2e
