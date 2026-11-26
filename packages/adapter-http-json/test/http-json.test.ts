@@ -290,6 +290,115 @@ describe('createHttpJsonAdapter failures', () => {
     controller.abort()
     await expect(adapter.fetch({ signal: controller.signal })).rejects.toThrow(/aborted/)
   })
+
+  it.each([
+    new DOMException('The operation was aborted', 'AbortError'),
+    new HttpJsonError('transport failed'),
+  ])('rejects an in-flight abort without sleeping or retrying on %s', async (error) => {
+    const controller = new AbortController()
+    const sleeps: number[] = []
+    const { impl, calls } = fakeFetch(() => {
+      controller.abort()
+      return Promise.reject(error)
+    })
+    const adapter = createHttpJsonAdapter({
+      ...BASE,
+      fetch: impl,
+      retry: { maxRetries: 2, sleep: async (ms) => void sleeps.push(ms) },
+    })
+
+    await expect(adapter.fetch({ signal: controller.signal })).rejects.toMatchObject({
+      name: 'HttpJsonError',
+      message: 'request aborted',
+    })
+    expect(calls).toHaveLength(1)
+    expect(sleeps).toEqual([])
+  })
+
+  it.each([200, 429, 503])(
+    'discards an HTTP %i response that resolves after abort',
+    async (status) => {
+      const controller = new AbortController()
+      let parsed = false
+      const sleeps: number[] = []
+      const { impl, calls } = fakeFetch(() => {
+        controller.abort()
+        const res = jsonResponse({ docs: [VALID_DOC] }, status)
+        res.json = async () => {
+          parsed = true
+          return { docs: [VALID_DOC] }
+        }
+        return res
+      })
+      const adapter = createHttpJsonAdapter({
+        ...BASE,
+        fetch: impl,
+        pagination: { mode: 'none' },
+        retry: { maxRetries: 2, sleep: async (ms) => void sleeps.push(ms) },
+      })
+
+      await expect(adapter.fetch({ signal: controller.signal })).rejects.toMatchObject({
+        name: 'HttpJsonError',
+        message: 'request aborted',
+      })
+      expect(calls).toHaveLength(1)
+      expect(parsed).toBe(false)
+      expect(adapter.stats.fetched).toBe(0)
+      expect(sleeps).toEqual([])
+    },
+  )
+
+  it.each(['resolves', 'rejects'])(
+    'handles an abort while reading JSON when the body %s',
+    async (outcome) => {
+      const controller = new AbortController()
+      const sleeps: number[] = []
+      const { impl, calls } = fakeFetch(() => {
+        const response = jsonResponse({ docs: [VALID_DOC] })
+        response.json = async () => {
+          controller.abort()
+          if (outcome === 'rejects')
+            throw new DOMException('The operation was aborted', 'AbortError')
+          return { docs: [VALID_DOC] }
+        }
+        return response
+      })
+      const adapter = createHttpJsonAdapter({
+        ...BASE,
+        fetch: impl,
+        retry: { maxRetries: 2, sleep: async (ms) => void sleeps.push(ms) },
+      })
+
+      await expect(adapter.fetch({ signal: controller.signal })).rejects.toMatchObject({
+        name: 'HttpJsonError',
+        message: 'request aborted',
+      })
+      expect(calls).toHaveLength(1)
+      expect(adapter.stats.fetched).toBe(0)
+      expect(sleeps).toEqual([])
+    },
+  )
+
+  it('still retries non-abort network errors up to maxRetries', async () => {
+    let attempts = 0
+    const sleeps: number[] = []
+    const { impl } = fakeFetch(() => {
+      attempts += 1
+      if (attempts <= 2) return Promise.reject(new TypeError('fetch failed'))
+      return jsonResponse({ docs: [VALID_DOC] })
+    })
+    const adapter = createHttpJsonAdapter({
+      ...BASE,
+      fetch: impl,
+      pagination: { mode: 'none' },
+      retry: { maxRetries: 2, baseDelayMs: 100, sleep: async (ms) => void sleeps.push(ms) },
+    })
+
+    const page = await adapter.fetch({})
+    expect(attempts).toBe(3)
+    expect(sleeps).toEqual([100, 200])
+    expect(page.items).toHaveLength(1)
+  })
 })
 
 describe('adapter conformance', () => {
