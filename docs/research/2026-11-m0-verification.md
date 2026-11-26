@@ -130,7 +130,7 @@ closed, the plan's own rule is not satisfied and the docs say so.
 | Item | Why it is still open | Where it is tracked |
 |---|---|---|
 | SHA-pinned actions | Needs a resolved digest per action, updated by Dependabot | Issue "Pin GitHub Actions to commit SHAs" |
-| Trademark and domain checks | Requires manual/legal search | Issue "Complete the name-check checklist" |
+| Trademark and domain checks | Requires manual/legal search | Issue "Complete the name-check checklist"; scope in the [trademark brief](2026-11-trademark-brief.md) |
 | npm scope creation | Requires an npm organisation account | Blocked on the release milestone |
 | First publish per package | Trusted publishers can only be configured for an existing package | M3 release task |
 | Real `CODEOWNERS` handles | Only one maintainer today; placeholder team handles will fail validation | M0 uses the owner account |
@@ -215,6 +215,9 @@ different TLD, so it does not by itself block the name. It does mean:
 - **Trademark search.** USPTO's `tmsearch` endpoint rejects automated requests
   (HTTP 405) and WIPO's Global Brand Database terms forbid automated queries, so
   this needs a person in a browser or a paid search service. Classes 9 and 42.
+  The scope, registries, questions and decision gates are written up in the
+  [trademark search brief](2026-11-trademark-brief.md) so the search can be run
+  without re-doing this note.
 - Domain purchase and social-handle reservation — needs payment and accounts.
 - Pronunciation and spelling check with developers.
 

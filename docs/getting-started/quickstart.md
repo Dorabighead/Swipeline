@@ -2,10 +2,12 @@
 
 **Target: a working deck in under ten minutes on a clean machine.** That is goal
 G1 in the design plan. Until the published template exists, the measurable half is
-the contributor setup below: on 2026-11-25 a clean tree copy with an empty pnpm
-store installed, built and tested in 1m 28s (install 41s, build 35s, test 12s,
-Node 24). The `quickstart` job that runs this over the published packages is not
-wired yet.
+the contributor setup below: on 2026-11-26 a clean tree copy with a fresh pnpm
+store installed, built and tested in **4m 16s** (install 3m 46s, build 22s, test
+8s; Node 24.22.3, pnpm 12.23.0, 206 tests). Install dominates and is
+network-bound — the same steps take well under a minute against a warm store, so
+treat the figure as the pessimistic case. The `quickstart` job that times this on
+every run over the published packages is not wired yet.
 
 ::: warning Not installable yet
 This is the v0.1 flow. Today `@swipeline/core` is an unpublished workspace

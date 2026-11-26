@@ -30,8 +30,17 @@ work starts.
 - [x] `react`: `SwipeDeck` with buttons, keyboard path and reduced motion
 - [x] Playground v0
 - [x] Examples: books, recipes and papers; quickstart docs
-- Acceptance: quickstart under 10 minutes on a clean machine, a11y checks pass,
-  `check:boundaries` green
+- [x] Quickstart measured on a clean tree with a fresh pnpm store: 4m 16s,
+  2026-11-26 ([detail](getting-started/quickstart.md#contributor-setup))
+- [x] a11y: axe `wcag2a`/`wcag2aa` passes on both binding fixtures in Chromium
+  (local run 2026-11-26; CI run `45602865428`, 2026-11-25)
+- [x] `check:boundaries` green: 19 packages, no framework imports outside bindings
+- [ ] First manual npm publish — blocked on the organisation transfer (#1) and on
+  creating the npm organisation
+
+Acceptance met apart from the first publish: quickstart under ten minutes on a
+clean machine, unit and component tests pass, a11y checks pass for the default
+deck, no framework imports outside binding packages, playground v0 live.
 
 ## M2 — v0.2: ranking and adapters
 
