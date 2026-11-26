@@ -2,4 +2,4 @@
 "@swipeline/adapter-http-json": patch
 ---
 
-Stop retrying or parsing HTTP JSON adapter requests after an abort signal fires. In-flight cancellations now reject immediately with `HttpJsonError('request aborted')` without sleeping, and responses resolving after abort are discarded.
+When a pending HTTP JSON request settles after cancellation, reject with `HttpJsonError('request aborted')` without retry backoff. Discard responses and parsed bodies that arrive after cancellation.
