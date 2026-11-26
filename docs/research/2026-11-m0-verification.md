@@ -12,7 +12,7 @@ owns it on that date; the source is given so it can be re-checked.
 | Check | Result | Source |
 |---|---|---|
 | GitHub repository `JoeyHammoth/Swipeline` | Exists, **public**, issues and wiki enabled | GitHub REST `repos/JoeyHammoth/Swipeline` |
-| GitHub organisation `swipeline` | **Available** (`orgs/swipeline` returns 404) | GitHub REST `orgs/swipeline` |
+| GitHub organisation `swipeline` | 404 on a public request; unclaimed as far as that can tell (see the 2026-11-26 update for the caveat) | GitHub REST `orgs/swipeline` |
 | npm `swipeline` | **Available** (registry 404) | `https://registry.npmjs.org/swipeline` |
 | npm `create-swipeline` | **Available** (404) | `https://registry.npmjs.org/create-swipeline` |
 | npm `@swipeline/core` | **Available** (404) | `https://registry.npmjs.org/@swipeline%2Fcore` |
@@ -168,17 +168,55 @@ what actually happened, because two items behaved differently from the plan.
    disabled and must be enabled in Settings → Code security if the plan's checklist
    is to be complete.
 
-## Name similarity checks (2026-11-24)
+## Name similarity checks (updated 2026-11-26)
 
-Recorded before the organisation transfer. These checks cover *similar*
-names, not just exact matches; trademark and domain registration still
-require accounts or payment and remain open in #18.
+First recorded on 2026-11-24; re-checked for #18. The exact-name registries are
+clear. The open risk is a **collision with an existing company**, not an
+unclaimed name.
 
-- npm search for `swipeline`: no results returned (checked 2026-11-24)
-- PyPI exact name `swipeline`: HTTP 404 (404 means the name is free)
-- pub.dev search for `swipeline`: pipeliner, smf_pipeline, gpu_pipeline, flutter_pipeline, otel_bitbucket_pipelines, leulit_pipeline_pattern, pipeline_plus, aws_codepipeline_api, mediapipeline_flutter, image_pipeline
-- GitHub organisation `swipeline`: not found or not visible to this token
+### Registry and platform checks
 
-Still outstanding: trademark search in the software classes, registering
-`swipeline.dev` and `swipeline.io`, reserving social handles, and a
-pronunciation/spelling check with developers.
+| Check | Result | How it was checked |
+|---|---|---|
+| npm `swipeline`, `swipelines`, `swipe-line`, `swipe-pipeline` | all HTTP 404 | `registry.npmjs.org/<name>` |
+| npm text search for `swipeline` | 0 results | `registry.npmjs.org/-/v1/search?text=swipeline` |
+| PyPI `swipeline`, `swipe-line`, `swipe-pipeline` | all HTTP 404 | `pypi.org/pypi/<name>/json` |
+| pub.dev search for `swipeline` | no exact or near match; only generic pipeline packages (`pipeliner`, `smf_pipeline`, `flutter_pipeline`, `gpu_pipeline`, `image_pipeline`, …) | `pub.dev/api/search?q=swipeline` |
+| GitHub organisation `swipeline` | HTTP 404 on an unauthenticated request, so unclaimed as far as a public check can tell. The project token has no `admin:org` scope, so creating it stays a signed-in step | `GET /orgs/swipeline` |
+
+### Domain status
+
+| Domain | Status on 2026-11-26 | Source |
+|---|---|---|
+| `swipeline.dev` | **Unregistered** — RDAP returns 404 "not found", and there are no NS records | `rdap.org/domain/swipeline.dev`, `dig NS` |
+| `swipeline.io` | **Unregistered** — whois returns "Domain not found", and there are no NS records | `whois swipeline.io`, `dig NS` |
+| `swipeline.co` | **Registered 2021-09-14** (GoDaddy) and serving a site | `whois swipeline.co` |
+
+### Name collision: Swipeline Media
+
+An active Turkish technology-media company already uses the name:
+
+- `swipeline.co`, "Swipeline" — startup and technology news in short formats;
+  Istanbul; a 2019 podcast that became a media company in 2021.
+- Company pages on LinkedIn (`swipelinetr`), Dealroom and CB Insights, an
+  Instagram account (`@swipeline_tr`), and a reported $250K round in 2022.
+
+It is a different field (media publishing, not a developer toolkit) and a
+different TLD, so it does not by itself block the name. It does mean:
+
+- the name is not unique on the open web, so search results will mix the two;
+- handles matching the project name are likely taken, so plan on adapted
+  handles rather than `@swipeline`;
+- a trademark search in classes 9 and 42 matters **more**, not less, because the
+  other user sits in the same broad technology sector.
+
+### Not done here
+
+- **Trademark search.** USPTO's `tmsearch` endpoint rejects automated requests
+  (HTTP 405) and WIPO's Global Brand Database terms forbid automated queries, so
+  this needs a person in a browser or a paid search service. Classes 9 and 42.
+- Domain purchase and social-handle reservation — needs payment and accounts.
+- Pronunciation and spelling check with developers.
+
+Still outstanding (#18): trademark clearance, buying `swipeline.dev` and
+`swipeline.io` while both are free, reserving handles, and the spelling check.
