@@ -95,8 +95,9 @@ design plan's §17.3 checklist.
 3. Are there near marks (`Swipe Line`, `Swipline`, `Swipe Pipeline`) in software
    classes that a registrar would treat as confusingly similar?
 4. Is the name descriptive or generic for a swipe-based recommendation toolkit?
-   ("swipe" plus "pipeline" is suggestive rather than descriptive, but a
-   registrar may still raise a descriptiveness objection in class 9.)
+   Both halves are ordinary words in this field, so expect a registrar to
+   consider a descriptiveness objection in class 9. The answer decides how much
+   a registration would be worth, and whether it is worth filing at all.
 5. If a conflict exists, what is the cheapest mitigation: a different class, a
    coexistence agreement, a slightly different mark, or a rename?
 
