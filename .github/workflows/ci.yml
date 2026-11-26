@@ -89,6 +89,9 @@ jobs:
       - name: Docs internal links resolve
         run: pnpm docs:links
 
+      - name: Docs link checker regression tests
+        run: pnpm docs:links:test
+
       - name: Changeset present
         if: matrix.node == 24 && github.event_name == 'pull_request'
         run: pnpm changeset status --since=origin/${{ github.base_ref }}
