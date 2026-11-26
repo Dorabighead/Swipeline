@@ -290,6 +290,80 @@ describe('createHttpJsonAdapter failures', () => {
     controller.abort()
     await expect(adapter.fetch({ signal: controller.signal })).rejects.toThrow(/aborted/)
   })
+
+  it('rejects an in-flight abort without sleeping or retrying', async () => {
+    const controller = new AbortController()
+    const sleeps: number[] = []
+    const { impl, calls } = fakeFetch(() => {
+      controller.abort()
+      const err = new Error('The operation was aborted')
+      err.name = 'AbortError'
+      return Promise.reject(err)
+    })
+    const adapter = createHttpJsonAdapter({
+      ...BASE,
+      fetch: impl,
+      retry: { maxRetries: 2, sleep: async (ms) => void sleeps.push(ms) },
+    })
+
+    await expect(adapter.fetch({ signal: controller.signal })).rejects.toMatchObject({
+      name: 'HttpJsonError',
+      message: 'request aborted',
+    })
+    expect(calls).toHaveLength(1)
+    expect(sleeps).toEqual([])
+  })
+
+  it('does not parse or return a response that resolves after abort', async () => {
+    const controller = new AbortController()
+    let parsed = false
+    const sleeps: number[] = []
+    const { impl, calls } = fakeFetch(() => {
+      controller.abort()
+      const res = jsonResponse({ docs: [VALID_DOC] })
+      res.json = async () => {
+        parsed = true
+        return { docs: [VALID_DOC] }
+      }
+      return res
+    })
+    const adapter = createHttpJsonAdapter({
+      ...BASE,
+      fetch: impl,
+      pagination: { mode: 'none' },
+      retry: { maxRetries: 2, sleep: async (ms) => void sleeps.push(ms) },
+    })
+
+    await expect(adapter.fetch({ signal: controller.signal })).rejects.toMatchObject({
+      name: 'HttpJsonError',
+      message: 'request aborted',
+    })
+    expect(calls).toHaveLength(1)
+    expect(parsed).toBe(false)
+    expect(adapter.stats.fetched).toBe(0)
+    expect(sleeps).toEqual([])
+  })
+
+  it('still retries non-abort network errors up to maxRetries', async () => {
+    let attempts = 0
+    const sleeps: number[] = []
+    const { impl } = fakeFetch(() => {
+      attempts += 1
+      if (attempts <= 2) return Promise.reject(new TypeError('fetch failed'))
+      return jsonResponse({ docs: [VALID_DOC] })
+    })
+    const adapter = createHttpJsonAdapter({
+      ...BASE,
+      fetch: impl,
+      pagination: { mode: 'none' },
+      retry: { maxRetries: 2, baseDelayMs: 100, sleep: async (ms) => void sleeps.push(ms) },
+    })
+
+    const page = await adapter.fetch({})
+    expect(attempts).toBe(3)
+    expect(sleeps).toEqual([100, 200])
+    expect(page.items).toHaveLength(1)
+  })
 })
 
 describe('adapter conformance', () => {

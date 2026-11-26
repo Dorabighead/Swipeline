@@ -297,6 +297,7 @@ export function createHttpJsonAdapter(config: HttpJsonAdapterConfig): HttpJsonAd
         const init: RequestInit = { headers: { accept: 'application/json' } }
         if (ctx.signal) init.signal = ctx.signal
         const response = await fetchImpl(url, init)
+        if (ctx.signal?.aborted) throw new HttpJsonError('request aborted')
 
         if (response.status === 429 || response.status >= 500) {
           if (attempt < maxRetries) {
@@ -319,8 +320,10 @@ export function createHttpJsonAdapter(config: HttpJsonAdapterConfig): HttpJsonAd
         try {
           json = await response.json()
         } catch {
+          if (ctx.signal?.aborted) throw new HttpJsonError('request aborted')
           throw new HttpJsonError('source did not return JSON', response.status)
         }
+        if (ctx.signal?.aborted) throw new HttpJsonError('request aborted')
         const candidates = config.itemsPath ? readPath(json, config.itemsPath) : json
         if (!Array.isArray(candidates)) {
           throw new HttpJsonError('itemsPath did not resolve to an array')
@@ -333,6 +336,7 @@ export function createHttpJsonAdapter(config: HttpJsonAdapterConfig): HttpJsonAd
         return nextCursor === undefined ? { items: candidates } : { items: candidates, nextCursor }
       } catch (cause) {
         if (cause instanceof HttpJsonError) throw cause
+        if (ctx.signal?.aborted) throw new HttpJsonError('request aborted')
         if (attempt >= maxRetries) {
           throw new HttpJsonError(cause instanceof Error ? cause.message : 'network request failed')
         }
